@@ -1,0 +1,76 @@
+<h1> Workout Log: </h1>
+
+
+<div> {{stat}} </div>
+
+<section id="inputSection">
+
+	<form id="inputForm">
+		<fieldset>
+			<legend> Input New Exercise: </legend>
+
+			<table id="inputFormHeaders">
+				<tr>
+					<th>Date</th>
+					<th>Exercise</th>
+					<th>Weight</th>
+					<th>lbs?</th>
+					<th>Reps</th>
+				</tr>
+			</table>
+
+			<input type="date" name="date" id="inputDate">
+			<input type="text" value="" name="exercise" id="inputExercise">
+			<input type="number" value="" name="weight" id="inputWeight">
+			<div id="inputLbsContainer">
+			 Yes <input type="checkbox" name="lbs" id="inputLbs">
+			</div>
+			<input type="number" value="" name="reps" id="inputReps">
+			<input type="button" name="Submit" value="Submit" id="inputSubmit">
+		</fieldset>
+	</form>
+</section>
+
+<br><br>
+
+
+<section id="tableSection">
+	<form id="tableForm">
+		<fieldset>
+		<legend>Exercise Data </legend>	
+
+			<div> {{results}}</div>
+
+			<table id="dataTable">
+				<tbody>
+				<tr>
+					<th>Date</th>
+					<th>Exercise</th>
+					<th>Weight</th>
+					<th>lbs?</th>
+					<th>Reps</th>
+				</tr>
+				{{#each data}}
+					<tr>	
+						<input type="hidden" id={{this.id}}>
+						<td>{{this.date}}</td>
+						<td>{{this.name}}</td>
+						<td>{{this.weight}}</td>
+						<td>{{this.lbs}}</td>
+						<td>{{this.reps}}</td>
+						<td><input type="button" value="Edit" id="editButton{{this.id}}"></td>
+						<td><input type="button" value="Delete" id="deleteButton{{this.id}}"></td>
+					</tr>
+				{{/each}}
+			</tbody>
+		</table>
+		</fieldset>
+	</form>
+
+</section>
+
+<section id="resetSection">
+	<input type="button" value="Reset Database..." id="resetTable">
+	<div id="resetStatus"></div>
+</section>
+<script src="/public/scripts/ajax.js"></script>

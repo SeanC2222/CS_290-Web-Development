@@ -1,0 +1,250 @@
+<div class="headerWrap"><div class="headerWrapInner"> Product </div></div>
+
+<div class="navigation">
+	<ul class="navigationItems">
+		<li class="current"> <a href="/"> Introduction </a> </li>
+		<li class="navlink"> <a href="/whatareURIs"> What are URI's </a></li>
+		<li class="navlink"> <a href="/APIIntro"> Intro to Oregon Liquour Prices API </a> </li>
+		<li class="navlink"> <a href="/APIPrice"> Prices </a> </li>
+		<li class="navlink"> Product </li>
+		<li class="navlink"> <a href="/APIStore"> Stores </a> </li>
+	</ul>
+</div>
+
+<section class="mainContent">
+ 	<h4> Product Overview </h4>
+	<p>The product category information can be accessed via HTTP GET request at:</p>
+
+	<div class="codeWrap"><code> http://www.oregonliquorprices.com/api/v1/product/ </code></div>
+	
+	<p>
+	The information comes formatted into a JSON object and looks like the following:</p>
+	
+		<div class="codeWrap"><code>{{productJSON}}</code></div><br>
+
+	<p>
+	There are some key features of the JSON object retrieved. You'll see the first component of the object "meta" is actually another JSON object containing meta information about the response:</p>
+
+	<ul>
+		<li> "limit" - The number of items listed in the object </li>
+		<li> "next" - The URI of the next page in the listing </li>
+		<li> "offset" - The current index your list starts at </li>
+		<li> "previous" - The URI of the previous page in the listing </li>
+		<li> "total_count" - The total number of items in the list </li>
+	</ul>
+	
+	<p>
+	The second component of the whole response is titled "object" and again is another JSON object itself. These represent the product listings returned in the response object:</p>
+
+	<ul>
+		<li> "age" - The price of that listing </li>
+		<li> "bottles_per_case" - The creation of the listing date and time </li>
+		<li> "code" - The date the price becomes effective </li>
+		<li> "created_at" - The id number of that price listing (not the product id number) </li>
+		<li> "description" - </li>
+		<li> "id" - 
+		<li> "modified_at" - The last time the listing was modified </li>
+		<li> "on_sale" - A boolean flag whether the product is currently on sale or not</li>
+		<li> "proof" - The alcohol proof of the product </li>
+		<li> "resource_uri" - The URI for the current price listing </li>
+		<li> "size" - The size of the product </li>
+		<li> "slug" - Matches the "code" field </li>
+		<li> "status" - "*" = New product, "@" = trial product, "$" = holiday product </li>
+		<li> "title" - The product name </li>
+	</ul>
+
+	<h4> Simple Category Queries </h4>
+
+	If you remember from the information on URI's, there are two different types: categories and elements. The product category explicitly uses both, whereas the price category doesn't explicitly have a URI for every price elementTo utilize the API, a query must be made server side to retrieve the information. This is due to the same-origin policy. So, a simple example of an express node.js query would look like the following:<br>
+
+	<div class="codeWrap"><code> var request = require('request'); <br>
+		request("http://www.oregonliquorprices.com/api/v1/product/", function(err, res, bod){<br>
+		&nbsp;&nbsp;&nbsp;var productJSON = bod;<br>
+		&nbsp;&nbsp;&nbsp;if (!err && res.statusCode < 400){<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;response.send(productJSON);<br>
+		&nbsp;&nbsp;&nbsp;} else {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;response.send("Error!");<br>
+		&nbsp;&nbsp;&nbsp;}<br>
+		});
+	<br></code></div>
+	<br>
+
+	<p>
+	Below, I have a button that sends an AJAX request to the this server with a command to make the request above. The code for that AJAX request looks like this:</p>
+
+	<div class="exampleWrap">
+	<div class="codeWrap"><code>
+	var req = new XMLHttpRequest();<br>
+	req.open("POST", "/priEx1", true);<br>
+	req.setRequestHeader('Content-Type', 'application/json');<br>
+	req.addEventListener('load', function(){<br>
+		&nbsp;&nbsp;&nbsp;if (req.status >= 200 && req.status < 400){<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var response = req.responseText;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priEx1Res.textContent += response;<br>
+		&nbsp;&nbsp;&nbsp;} else {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priEx1Res.textContent = "Error.";<br>
+		&nbsp;&nbsp;&nbsp;}<br>
+	});<br>
+	req.send(JSON.stringify({"command":"priEx1"}));<br>
+
+	 </code></div></div>
+
+	<p>
+	Let's see what that code might do!</p>
+
+	<form>
+		<fieldset id="proEx1Field">
+			<legend> Simple Query Example #1 </legend>
+			<input type="button" value="Push for Example!" id="proEx1">
+			<div class="exampleResults" id="proEx1Res"></div> 
+		</fieldset>
+	</form>
+	
+	<h4> Filtering the Product Simple Category Queries </h4>
+	<p> To better control the information we want from the API, we are able to filter our simple request by adding on further queries onto our request. For instance, the store list can be affected by adding the queries "limit=###" or "offset=###" to the end of the GET request. This will affect how many stores are returned in the JSON object (limit), and at which point in the list we're retrieving the stores from (offset). In our code that may look like this: </p>
+
+	<div class="exampleWrap">
+	<div class="codeWrap"><code>
+	...<br>
+	request2("http://oregonliquorprices.com/api/v1/product/?limit=###&offset=###", [callback function])
+	</code></div></div>
+	
+	<p>It's worth noting in the code above, the numbers signs should be replaced with actual integer values when performing your filtered queries. Both query filters are not needed, but can also be used independently. Limit has a default value of 20, and offset has a default value of 0. </p>
+	
+	<p> We can also filter our category query based on the "title" of the alcohol. To do so we just add the query "?title=NAME" where 'NAME' is the alcohol name. This is NOT a search, but if you know the name of a product (for instance "Smirnoff Vodka 100") you can filter for that product. An example query might be:</p>
+
+	<div class="exampleWrap">
+	<div class="codeWrap"><code>
+	...<br>
+	request3("http://oregonliquorprices.com/api/v1/product/?title=Smirnoff+Vodka+100", [callback function])
+	</code></div></div>
+
+	<p> This will bring back all listings (usually of the various sizes) for a specific type of alcohol. Let's try it out: </p>
+
+	<form>
+		<fieldset id="proEx2Field">
+			<legend> Simple Categor Query Example #2 </legend>
+			<input type="button" value="Push for Example!" id="proEx2">
+			<div class="exampleResults" id="proEx2Res"></div> 
+		</fieldset>
+	</form>
+	
+	<h4> Simple Element Queries </h4>
+	<p>
+	Element Queries are especially simple with RESTful API's, but you have to already know the URI address in order to access the resource. They can be accessed by simple HTTP GET commands with no special flags. When accessing a specific product URI, OregonLiquorPrices.com will deliver the element data to you in JSON form. An element query will look something like the following:</p>
+
+	<div class="exampleWrap">
+	<div class="codeWrap"><code>
+	...<br>
+	request3("http://oregonliquorprices.com/api/v1/product/579, [callback function])
+	</code></div></div>
+	
+	<p>The JSON returned by a product element query will be the exact same JSON information contained in the "objects" array of a category query.</p>
+
+	<h4> Better Information! </h4>
+	<p>Now that we can query for product categories and product elements, how can we go about locating a specific alcohol listing without having to guess the URI for the product, or know a specific "title"? We can get the whole list and then parse it! A simple solution would be to set the limit way above what we would expect the products to be (there are 5111 in the database as of the writing of this how to). We can then use our client to parse the returned data and find the information we want. Here's how to request the list server side:</p>
+
+
+	<div class="exampleWrap">
+	<div class="codeWrap"><code>
+	...
+	request4("http://oregonliquorprices.com/api/v1/product/?limit=100000",... [callback function])
+	</code></div></div>
+
+	<p> On the client side we would use a similar AJAX request from above to request the data, but how do we handle it? The returned object is a JSON object containing many other JSON objects. Knowing that, we can tell our client side to handle the data as JSON and parse it looking for the data. The parsing could be done server side as well, but for example continuity the server will only deliver the information unchanged. Updating our client side we see, and noting the variable "searchRequest" could come from anywhere on the client side (like a drop down menu or text box) we see:</p>
+
+	<div class="exampleWrap">
+	<div class="codeWrap"><code>
+	...<br>
+	var response = JSON.parse(req.responseText)<br>
+	var searchAnswers = [];<br>
+	for(var i in response["objects"]){<br>
+		&nbsp;&nbsp;&nbsp;if (response["objects"][i]["title"] == searchRequest){<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;searchAnswers.push(response["objects"][i]);<br>
+		&nbsp;&nbsp;&nbsp;}<br>
+	}<br>
+	</code></div></div>
+
+	<p> Piecing it all together we see this: </p>
+	<ul> Recommended Searches:
+		<li> Smirnoff Vodka 100 </li>
+		<li> Smirnoff Vanilla </li>
+		<li> Jose Cuervo Gold Tequila </li>
+		<li> Absolut Citron Vodka </li>
+		<li> Rumple Minze </li>
+	</ul>
+
+	<form>
+		<fieldset id="proEx3Field">
+			<legend> Better Query Example #3 </legend>
+			<input type="text" value="Smirnoff Vodka 100" id="proNameEx3">
+			<input type="button" value="Submit" id="proSubmitEx3">
+			<div class="exampleResults" id="proEx3Res"></div>
+		</fieldset>
+	</form>
+
+	<h4> Conclusion </h4>
+	<p> The products return data is all JSON and can be parsed and handled easily enough. Now that it can be accessed, the product URI's can be very useful when put together with the information from the pricing URI's. You can search for a product in the product section, and then use the product ID number to search the price for the current price of the bottle of interest! The code can look like:</p>
+
+	<div class="exampleWrap">
+	<div class="codeWrap"><code>
+	var req = new XMLHttpRequest();<br>
+		&nbsp;&nbsp;&nbsp;var search = proNameEx4.value;		//Our Search Name from the box<br>
+		&nbsp;&nbsp;&nbsp;proEx4Res.textContent = "Working...";<br>
+		&nbsp;&nbsp;&nbsp;req.open("POST", "/proEx", true);	//Our web server request<br>
+		&nbsp;&nbsp;&nbsp;req.setRequestHeader('Content-Type', 'application/json');<br>
+		&nbsp;&nbsp;&nbsp;req.addEventListener('load', function(){<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (req.status >= 200 && req.status < 400){<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var productJSON = JSON.parse(req.responseText); 	//The data from our product query<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var searchResults = [];<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for(var i in productJSON['objects']){		//Parsing our product data for our search results<br> 
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var count = 0;<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(productJSON['objects'][i]['title'] == proNameEx4.value){<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;searchResults.push(productJSON['objects'][i]);<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(searchResults[0] == null){<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;proEx4Res.textContent += "No Exact Match Found.";<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;proEx4Res.innerHTML = "&lt;br&gt; Results: &lt;br&gt;&lt;br&gt;";	//If there are results, set up a results list<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var priceCheck = function(sResults){		//Function to send our requests necessary for the closures<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log(sResults["id"]);<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var subReq = new XMLHttpRequest();<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subReq.open("POST", "/priEx", true);		//Using our price search on our web server over again<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subReq.setRequestHeader('Content-Type', 'application/json');<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subReq.addEventListener('load', function() {<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (subReq.status >= 200 && subReq.status < 400){<br>
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var priceJSON = JSON.parse(subReq.responseText);<br>
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;proEx4Res.innerHTML += sResults["title"] + " Size: " + sResults["size"];<br>
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;proEx4Res.innerHTML += "&lt;br&gt; Price: " + priceJSON['objects'][0]["amount"] + "&lt;br&gt;&lt;br&gt;";<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;proEx4Res.innerHTML += "Bad Search";<br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subReq.send(JSON.stringify({"command":"priEx4", "productNumber": sResults["id"]}));<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for(var j in searchResults){<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priceCheck(searchResults[j]);<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;proEx4Res.textContent = "Error.";<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+		&nbsp;&nbsp;&nbsp;});<br>
+		req.send(JSON.stringify({"command":"proEx3", "productName": proNameEx4.value}));<br>
+		document.getElementById("proEx4Field").insertBefore(clearButton4,proEx4);<br>
+	</code></div></div>
+
+	<form>
+		<fieldset id="proEx4Field">
+			<legend> Price Search Example #4 </legend>
+			<input type="text" value="Smirnoff Vodka 100" id="proNameEx4">
+			<input type="button" value="Submit" id="proSubmitEx4">
+			<div class="exampleResults" id="proEx4Res"></div>
+		</fieldset>
+	</form>
+
+
+</section>
+
+<script src="/public/scripts/apiproduct.js"></script>

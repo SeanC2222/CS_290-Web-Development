@@ -1,0 +1,38 @@
+ <div class="headerWrap"><div class="headerWrapInner"> What are URIs?</div></div>
+
+<div class="navigation">
+	<ul class="navigationItems">
+		<li class="current"> <a href="/"> Introduction </a> </li>
+		<li class="navlink"> What are URI's </li>
+		<li class="navlink"> <a href="/APIIntro"> Intro to Oregon Liquour Prices API </a> </li>
+		<li class="navlink"> <a href="/APIPrice"> Prices </a> </li>
+		<li class="navlink"> <a href="/APIProduct"> Product </a> </li>
+		<li class="navlink"> <a href="/APIStore"> Stores </a> </li>
+	</ul>
+</div>
+
+<section class="mainContent">
+	<section>	<h4>URI's Introduction </h4>
+		URI stands for "Uniform Resource Identifier". This is a string of characters used to identify the name of a resource, typically in a world wide web setting." A URL ("Uniform Resource Locator") is a type of URI, but not all URI's are URL's. The key distinction between the two lies in the fact that a URL specifies a means of obtaining the resource (like the resource's address), whereas a URI speaks to the unique identifier nature of the resource. Sometimes, a URL is both the unique identifier AND the means of obtaining the resources. Other times, the URI can stand alone as an identifier but have no means of delivering the resource and needs a URL to fulfill that function.
+	</section>
+	<section>	<h4>URI Sytax </h4> 
+		The URI syntax was finalized in 2005. It follows the following form:<br><br>
+	<div class="codeWrap"><code> scheme:[//[user:password@]host[:port]][/]path[?query][#fragment] </code></div><br>
+	The only components relevant to our usage that are addressed by this how-to are the host and path.
+	</section>
+	<br>
+	<section> The host is the entity that is hosting the resource. This is often a registered name, but can also be an IP address. An example from our introduction page would be <div class="codeWrapInline"><code> www.myphonenumbers.com </code></div>
+	</section>
+	<br>
+	<section> The path is our direction to our data. This is usually organized in hierarchal form, and gives us the specific method for accessing a resource. Again from our introduction page, the path could be <div class="codeWrapInline"><code> /name/jondoe </code></div>, or if accessing the area code it could be <div class="codeWrapInline"><code> /areacode/555 </code></div>.
+	</section> 
+	<section>	<h4> Why URI's? </h4>
+		The URI allows us to organize our informationin a canonical way. It also contains all the information relevant to identifying a resource, and obtaining it as necessary. For web services, such as the Oregon Liquor Price API, this allows us easy access and a consistent method for delivering information in discrete chunks. For delivering data in a fast and reliable way, URI's can be leveraged to deliver organized data without the need for a heavy duty front end program or interface.
+	</section>
+
+<section class="references">
+	<p> Information on URI was found from:<br>
+		Uniform Resource Identifier. (Last updated: 2015, November 25). Retreived November 29, 2015, from <a href="https://en.wikipedia.org/wiki/Uniform_Resource_Identifier"> https://en.wikipedia.org/wiki/Uniform_Resource_Identifier </a>
+	</p>
+</section>
+</section>

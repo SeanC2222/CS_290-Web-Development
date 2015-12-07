@@ -1,0 +1,67 @@
+<div class="headerWrap"><div class="headerWrapInner">Oregon Liquour Prices API </div></div>
+
+<div class="navigation">
+	<ul class="navigationItems">
+		<li class="current"> Introduction </li>
+		<li class="navlink"> <a href="/whatareURIs"> What are URI's </a></li>
+		<li class="navlink"> <a href="/APIIntro"> Intro to Oregon Liquour Prices API </a> </li>
+		<li class="navlink"> <a href="/APIPrice"> Prices </a> </li>
+		<li class="navlink"> <a href="/APIProduct"> Product </a> </li>
+		<li class="navlink"> <a href="/APIStore"> Stores </a> </li>
+	</ul>
+</div>
+
+<section class="mainContent">
+	<p>	<h4> This is Sean Mulholland's guide to the Oregon Liquour Prices RESTful API. </h4> Here you'll find a quick introduction on what it means to be a REST based web service, a quick breakdown on what a URI is vs. a URL, an introduction to the API, and a quick example based guide on how to use the 3 main features of the API. Feel free to use the navigation links to jump around to the various sections.
+	</p>
+	<p>	<h4> What does it mean to be RESTful? </h4> REST is an acronym that stands for: "Representational State Transfer". It is the software architectural style of the World Wide Web, and is very much a part of how we use the internet. RESTful systems or APIs typically communicate over HTTP and use the same verbage as HTTP. A RESTful API will typically end up using URI's (Uniform Resource Identifiers) in the form of URL's (Uniform Resource Locators). There is further detail in the section titled <a href="/whatareURIs">"What are URI's?"</a>.
+	</p>
+	<p>	Per Wikipedia, a RESTful API has the following attributes:</p>
+		<ul>
+			<li> A base URI </li>
+			<li> An internet media type (Typically JSON) </li>
+			<li> Standard HTTP Methods </li>
+			<li> Hypertext links to reference state </li>
+			<li> Hypertext links to reference related resources </li>
+		</ul>
+
+	<p>The API will have 2 major types of resources to interact with: collections and elements. The collections represent the broader categories that contain elements of that category. For instance if your RESTful API was for information on fruit, one category may be "apple" and the elements may be specifc apples like "Fuji" or "Granny Smith". The collections have their own URL, and each element will have its own URL.</p>
+
+	<p>Further, a RESTful API has prescribed actions for the HTTP method interactions as follows:</p>
+
+		<h5> Collection URI's </h5>
+		<ul>
+			<li> GET - List the URI's and other details of the collection </li>
+			<li> POST - Create a new entry in the collection. The entry's URI will be automatically assigned </li>
+			<li> PUT - Replace the entire collection with another collection </li>
+			<li> DELETE - Delete's the entire collection </li>
+		</ul>
+
+		<h5> Element URI's </h5>
+		<ul>
+			<li> GET - Retrieve a representation of the addressed member of the collection </li>
+			<li> POST - Not generally used, but may be used to turn an element into a collection URI and add a new entry </li>
+			<li> PUT - Replace the element with a new or another element </li>
+			<li> DELETE - Deletes the element </li>
+		</ul>
+
+	Some examples of how a RESTful web based system is more easily illustrated than explained. Security and privacy issues aside, let's imagine you want to publish your contacts list from your phone via the web. You have purchased a domain and have decided to organize your information into two searches: names, and area codes. Your domain is <div class="codeWrapInline"><code> www.myphonenumbers.com </code></div>.
+
+	<p>	A RESTful web interface to find your friend Jon Doe may look like this: <br>
+	<div class="codeWrap"><code> www.myphonenumbers.com/name/jondoe </code></div>
+	<br>
+		A RESTful web interface to search by area code may look like this: <br><br>
+	<div class="codeWrap"><code> www.myphonenumbers.com/areacode/555 </code></div>
+	<p> 	As you can see, the searches are not your typical GET/POST interactions with the home site. The information follows the format of:<br>
+	<div class="codeWrap"><code>[domain][collection][element]</code></div><br>
+	The domain in our case is www.myphonenumbers.com<br>
+	The collection would be whatever category we were interested in. In this case "name" or "areacode"<br>
+	The element refers to the unique identifier of that category. So, for the name you have "Jon Doe" and for the area code you have "555". <br>
+	The important part is that the interface has a unique page element for each listing. It is up to the programmer to decide how to implement this on the back end, but for the user on the front end this is how the information may be accessed. </p>
+
+<section class="references">
+	<p> Information on REST was found from:<br>
+		Representational State Transfer. (Last updated: 2015, November 24). Retreived November 29, 2015, from <a href="https://en.wikipedia.org/wiki/Representational_state_transfer"> https://en.wikipedia.org/wiki/Representational_state_transfer </a>
+	</p>
+</section>
+</section>

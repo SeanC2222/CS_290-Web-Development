@@ -1,0 +1,136 @@
+<div class="headerWrap"><div class="headerWrapInner"> Store </div></div>
+
+<div class="navigation">
+	<ul class="navigationItems">
+		<li class="current"> <a href="/"> Introduction </a> </li>
+		<li class="navlink"> <a href="/whatareURIs"> What are URI's </a></li>
+		<li class="navlink"> <a href="/APIIntro"> Intro to Oregon Liquour Prices API </a> </li>
+		<li class="navlink"> <a href="/APIPrice"> Prices </a> </li>
+		<li class="navlink"> <a href="/APIProduct"> Product </a> </li>
+		<li class="navlink"> Stores </li>
+	</ul>
+</div>
+
+<section class="mainContent">
+	<h4> Store Overview </h4>
+		The price information can be accessed via HTTP GET request at:<br><br>
+	<div class="codeWrap"><code> http://www.oregonliquorprices.com/api/v1/store/ </code></div><br>
+	The information comes formatted into a JSON object and looks like the following: <br><br>
+			<div class="codeWrap"><code>{{storeJSON}}</code></div><br><br>
+	There are some key features of the JSON object retrieved. You'll see the first component of the object "meta" is actually another JSON object containing meta information about the response:
+	<ul>
+		<li> "limit" - The number of items listed in the object </li>
+		<li> "next" - The URI of the next page in the element </li>
+		<li> "offset" - The current index your list starts at </li>
+		<li> "previous" - The URI of the previous page in the element </li>
+		<li> "total_count" - The total number of items in the list </li>
+	</ul>
+	The second component of the whole response is titled "object" and again is another JSON object itself. These represent the store elements returned in the response object with the following components:
+	<ul>
+		<li> "address" - The entire address of that element store</li>
+		<li> "address_raw" - The street address of that element store</li>
+		<li> "county" - The county of the element store </li>
+		<li> "hours_raw" - The element store's hours </li>
+		<li> "id" - The unique database store number </li> 
+		<li> "key" - The store number given by the state </li>
+		<li> "latitutde" - The latitude of the element store </li>
+		<li> "longitude" - The longitude of the element store </li>
+		<li> "name" - The store's name </li>
+		<li> "phone" - The store's phone number </li> 
+		<li> "resource_uri" - The URI for the current store element </li>
+	</ul>
+
+
+	<h4> Simple Queries </h4>
+	<p>
+	To utilize the API, a query must be made server side to retrieve the information. This is due to the same-origin policy and the API not being set up to accept AJAX requests. So, a simple example of an express node.js query would look like the following:</p>
+	<div class="exampleWrap">
+	<div class="codeWrap"><code> var request = require('request'); <br>
+		request("http://www.oregonliquorprices.com/api/v1/store/", function(err, res, bod){<br>
+		&nbsp;&nbsp;&nbsp;var storeJSON = bod;<br>
+		&nbsp;&nbsp;&nbsp;if (!err && res.statusCode < 400){<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;response.send(storeJSON);<br>
+		&nbsp;&nbsp;&nbsp;} else {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;response.send("Error!");<br>
+		&nbsp;&nbsp;&nbsp;}<br>
+		});
+	<br></code></div>
+	<p>
+	Below, I have a button that sends an AJAX request to the this server with a command to make the request above. The code for that AJAX request looks like this:</p>
+
+	<div class="exampleWrap">
+	<div class="codeWrap"><code>
+	var req = new XMLHttpRequest();<br>
+	req.open("POST", "/stoEx1", true);<br>
+	req.setRequestHeader('Content-Type', 'application/json');<br>
+	req.addEventListener('load', function(){<br>
+		&nbsp;&nbsp;&nbsp;if (req.status >= 200 && req.status < 400){<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var response = req.responseText;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stoEx1Res.textContent += response;<br>
+		&nbsp;&nbsp;&nbsp;} else {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stoEx1Res.textContent = "Error.";<br>
+		&nbsp;&nbsp;&nbsp;}<br>
+	});<br>
+	req.send(JSON.stringify({"command":"stoEx1"}));<br>
+
+	 </code></div></div>
+	<br>
+	Let's see what that code might do!
+	<br><br>
+	<form>
+		<fieldset id="stoEx1Field">
+			<legend> Simple Query Example #1 </legend>
+			<input type="button" value="Push for Example!" id="stoEx1">
+			<div class="exampleResults" id="stoEx1Res"></div> 
+		</fieldset>
+	</form>
+
+	<h4> Filtering the Store Simple Queries </h4>
+	<p> To better control the information we want from the API, we are able to filter our simple request by adding on further queries onto our request. For instance, the store list can be affected by adding the queries "limit=###" or "offset=###" to the end of the GET request. This will affect how many stores are returned in the JSON object (limit), and at which point in the list we're retrieving the stores from (offset). In our code that may look like this: </p>
+
+	<div class="exampleWrap">
+	<div class="codeWrap"><code>
+	request2("http://oregonliquorprices.com/api/v1/store/?limit=###&offset=###", [callback function])
+	</code></div></div>
+	
+	<p>It's worth noting in the code above, the numbers signs should be replaced with actual integer values when performing your filtered queries. Both query filters are not needed, but can also be used independently. Limit has a default value of 20, and offset has a default value of 0. </p>
+
+	<h4> Better Information! </h4>
+	<p> Now that we know how to retrieve SOME information, let's figure out something to do with it! For instance, let's find all the stores in a certain county... For instance if we change our server request to include a filter in the query so we receive ALL the stores, and then parse the returned data for stores from a returned county we'll be able to find the stores we're interested in. Changing our request from above we add on "?limit=246" (because there are currently 246 liquor stores in Oregon).</p>
+
+	<div class="exampleWrap">
+	<div class="codeWrap"><code>
+	...
+	request3("http://oregonliquorprices.com/api/v1/store/?limit=246",... [callback function])
+	</code></div></div>
+
+	<p> So we would use a similar AJAX request from above to request the data, but how do we handle it? The returned object is a JSON object containing many other JSON objects. Knowing that, we can tell our client side to handle the data as JSON and parse it looking for the data. The parsing could be done server side as well, but for example continuity the server will only deliver the information unchanged. Updating our client side we see, and noting the variable "searchRequest" could come from anywhere on the client side (like a drop down menu or text box) we see:</p>
+
+	<div class="exampleWrap">
+	<div class="codeWrap"><code>
+	...<br>
+	var response = JSON.parse(req.responseText)<br>
+	var searchAnswers = [];<br>
+	for(var i in response["objects"]){<br>
+		&nbsp;&nbsp;&nbsp;if (response["objects"][i]["county"] == searchRequest){<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;searchAnswers.push(response["objects"][i]);<br>
+		&nbsp;&nbsp;&nbsp;}<br>
+	}<br>
+	</code></div></div>
+
+	<p> Piecing it all together we see this: </p>
+
+	<form>
+		<fieldset id="stoEx2Field">
+			<legend> Better Query Example #2 </legend>
+			<input type="text" value="Baker" id="stoEx2">
+			<input type="button" value="Submit" id="stoSubmitEx2">
+			<div class="exampleResults" id="stoEx2Res"></div>
+		</fieldset>
+	</form>
+
+	<h4> Conclusion </h4>
+	<p> The store information is simple JSON. Once you know that and can retrieve it from the RESTful service, it's up to you on how to use the data. In Example #2 we see that a specific string of "county" was added in to our parsing. Further generalization could allow the function to parse any of the variables for specific searches. More creative ideas could include using other API's to find the store nearest to you and seeing if you have enough time to reach there before it closes. The data is there! </p>
+</section>
+
+<script src="/public/scripts/apistores.js"></script>

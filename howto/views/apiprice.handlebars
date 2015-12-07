@@ -1,0 +1,185 @@
+<div class="headerWrap"><div class="headerWrapInner"> Price </div></div>
+
+<div class="navigation">
+	<ul class="navigationItems">
+		<li class="current"> <a href="/"> Introduction </a> </li>
+		<li class="navlink"> <a href="/whatareURIs"> What are URI's </a></li>
+		<li class="navlink"> <a href="/APIIntro"> Intro to Oregon Liquour Prices API </a> </li>
+		<li class="navlink"> Price </li>
+		<li class="navlink"> <a href="/APIProduct"> Product </a> </li>
+		<li class="navlink"> <a href="/APIStore"> Stores </a> </li>
+	</ul>
+</div>
+
+<section class="mainContent">
+	<h4> Price Overview </h4>
+	<p>
+	The price category information can be accessed via HTTP GET request at:</p>
+
+	<div class="codeWrap"><code> http://www.oregonliquorprices.com/api/v1/price </code></div>
+	
+	<p>
+	The information comes formatted into a JSON object and looks like the following:</p>
+
+			<div class="codeWrap"><code>{{priceJSON}}</code></div><br>
+	<p>
+	There are some key features of the JSON object retrieved. You'll see the first component of the object "meta" is actually another JSON object containing meta information about the response:</p>
+
+	<ul>
+		<li> "limit" - The number of items listed in the object </li>
+		<li> "next" - The URI of the next page in the listing </li>
+		<li> "offset" - The current index your list starts at </li>
+		<li> "previous" - The URI of the previous page in the listing </li>
+		<li> "total_count" - The total number of items in the list </li>
+	</ul>
+
+	<p>
+	The second component of the whole response is titled "object" and again is another JSON object itself. These represent the price listings returned in the response object:</p>
+
+	<ul>
+		<li> "amount" - The price of that listing </li>
+		<li> "created_at" - The creation of the listing date and time </li>
+		<li> "effective_date" - The date the price becomes effective </li>
+		<li> "id" - The id number of that price listing (not the product id number) </li>
+		<li> "modified_at" - The last time the listing was modified </li>
+		<li> "product" - The product listing of the current price listing </li>
+		<li> "resource_uri" - The URI for the current price listing </li>
+	</ul>
+	
+	<p>
+	It's important to note that there can be multiple price listings for a single product. These are price listings at the given "effective_date". For a product that has been available for an extended period of time (i.e. Smirnoff Vodka), you'll have many listings for a single product. 
+	</p>
+	
+		<h4> Simple Category Queries </h4>
+
+	<p>To utilize the API, a query must be made server side to retrieve the information. This is due to the same-origin policy. So, a simple example of an express node.js query would look like the following:</p>
+
+	<div class="exampleWrap">
+	<div class="codeWrap"><code>
+		var request = require('request'); <br>
+		request("http://www.oregonliquorprices.com/api/v1/price/", function(err, res, bod){<br>
+		&nbsp;&nbsp;&nbsp;var priceJSON = bod;<br>
+		&nbsp;&nbsp;&nbsp;if (!err && res.statusCode < 400){<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;response.send(priceJSON);<br>
+		&nbsp;&nbsp;&nbsp;} else {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;response.send("Error!");<br>
+		&nbsp;&nbsp;&nbsp;}<br>
+		});
+	<br></code></div></div>
+
+	<p>
+	Below, I have a button that sends an AJAX request to the this server with a command to make the request above. The code for that AJAX request looks like this:</p>
+
+	<div class="exampleWrap">
+	<div class="codeWrap"><code>
+	var req = new XMLHttpRequest();<br>
+	req.open("POST", "/priEx1", true);<br>
+	req.setRequestHeader('Content-Type', 'application/json');<br>
+	req.addEventListener('load', function(){<br>
+		&nbsp;&nbsp;&nbsp;if (req.status >= 200 && req.status < 400){<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var response = req.responseText;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priEx1Res.textContent += response;<br>
+		&nbsp;&nbsp;&nbsp;} else {<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priEx1Res.textContent = "Error.";<br>
+		&nbsp;&nbsp;&nbsp;}<br>
+	});<br>
+	req.send(JSON.stringify({"command":"priEx1"}));<br>
+
+	 </code></div></div>
+	<br>
+
+	Let's see what that code might do!
+	<br><br>
+	<form>
+		<fieldset id="priEx1Field">
+			<legend> Simple Query Example #1 </legend>
+			<input type="button" value="Push for Example!" id="priEx1">
+			<div class="exampleResults" id="priEx1Res"></div> 
+		</fieldset>
+	</form>
+	
+	<h4> Filtering the Store Simple Queries </h4>
+	<p> To better control the information we want from the API, we are able to filter our simple request by adding on further queries onto our request. For instance, the price list can be affected by adding the queries "limit=###" or "offset=###" to the end of the GET request. This will affect how many prices are returned in the JSON object (limit), and at which point in the list we're retrieving the prices from (offset). In our code that may look like this: </p>
+
+	<div class="exampleWrap">
+	<div class="codeWrap"><code>
+	request2("http://oregonliquorprices.com/api/v1/price/?limit=###&offset=###", [callback function])
+	</code></div></div>
+	
+	<p>It's worth noting in the code above, the numbers signs should be replaced with actual integer values when performing your filtered queries. Both query filters are not needed, but can also be used independently. Limit has a default value of 20, and offset has a default value of 0. </p>
+
+	<h4> Simple Element Queries </h4>
+	<p>
+	Element Queries are especially simple with RESTful API's, but you have to already know the URI address in order to access the resource. They can be accessed by simple HTTP GET commands with no special queries. When accessing a specific price URI, OregonLiquorPrices.com will deliver the element data to you in JSON form. An element query will look something like the following:</p>
+
+	<div class="exampleWrap">
+	<div class="codeWrap"><code>
+	...<br>
+	request3("http://oregonliquorprices.com/api/v1/price/427594, [callback function])
+	</code></div></div>
+	
+	<p>The JSON returned by a price element query will be the exact same JSON information contained in the "objects" array of a category query.</p>
+
+	<h4> Better Information! </h4>
+	<p>We can now query for lists and elements of prices.... So what if we want to know the price history of a particular product? For instance, what if we want to know how much a 750mL 100 proof Smirnoff Vodka costs in store? Fortunately the API can help us! By using a query of "?product=####" we can limit the list to only the prices of products with the product code '####' (replace the pound signs with the product code). Fortunately I did a little research and the product code for our product of interest is '579'. Our server side request code looks like this:</p>
+
+
+	<div class="exampleWrap">
+	<div class="codeWrap"><code>
+	...<br>
+	request4("http://oregonliquorprices.com/api/v1/price/?product=579",... [callback function])
+	</code></div></div>
+
+	<p>Using the same type of AJAX request tied to the button below, we can see what kind of information we get back:</p>
+
+	<form>
+		<fieldset id="priEx2Field">
+			<legend> Better Query Example #2 </legend>
+			<input type="button" value="Push for Example" id="priSubmitEx2">
+			<div class="exampleResults" id="priEx2Res"></div>
+		</fieldset>
+	</form>
+ 
+	<p>So now we have a list of prices with the same product. If you look closely you can see the date the prices went into effect, and fortunately for us the first object in the price list is also the NEWEST entry! So, if we adjust request to include a query for "?limit=1" we should see only one entry for the newest price for our product of interest. The adjustment looks like this:</p>
+
+	<div class="exampleWrap">
+	<div class="codeWrap"><code>
+	...<br>
+	request5("http://oregonliquorprices.com/api/v1/price/?product=579&limit=1",... [callback function])
+	</code></div></div><br>
+ 
+	<form>
+		<fieldset id="priEx3Field">
+			<legend> Better Query Example #3 </legend>
+			<input type="button" value="Push for Example" id="priSubmitEx3">
+			<div class="exampleResults" id="priEx3Res"></div>
+		</fieldset>
+	</form>
+
+	<p> We can now locate the current price of any product if we have the product number. If we plan smartly, we can create a variable input for our product code request, and then perform our queries for whichever product we like! See here:</p>
+
+	<div class="exampleWrap">
+	<div class="codeWrap"><code>
+	var productNumber = inr.body['productNumber'];
+	request6("http://oregonliquorprices.com/api/v1/price/?product=" + productNumber + "&limit=1",... [callback function])	
+	</code></div></div>
+
+	<p>I've tied the text input below to the post request body 'productNumber' variable being sent in the request JSON. Try the variable version below:</p>
+
+
+	<form>
+		<fieldset id="priEx4Field">
+			<legend> Better Query Example #4 </legend>
+			<input type="text" value="579" id="priProductEx4">
+			<input type="button" value="Submit" id="priSubmitEx4">
+			<div class="exampleResults" id="priEx4Res"></div>
+		</fieldset>
+	</form>
+
+
+	<h4> Conclusion </h4>
+	<p>The price information is just simple information to be parsed and manipulated as you wish. We can now retrieve items by their product code, and find up to date liquor prices for any of the active product codes.</p>
+
+</section>
+
+<script src="/public/scripts/apiprice.js"></script>

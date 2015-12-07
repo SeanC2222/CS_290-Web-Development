@@ -1,0 +1,34 @@
+<h1> Edit Entry </h1>
+
+<form>
+
+	<fieldset>
+		<legend> Entry Data </legend>
+		<table id="editTable">
+			<tbody>
+			<tr>
+				<th>Date</th>
+				<th>Exercise</th>
+				<th>Weight</th>
+				<th>lbs?</th>
+				<th>Reps</th>
+			</tr>
+			<tr>
+				<input type="hidden" value={{id}} id="hiddenID">
+				<td><input type="date" value="{{date}}" id="editDate"></td>
+				<td><input type="text" value="{{name}}" id="editName"></td>
+				<td><input type="number" value="{{weight}}" id="editWeight"></td>
+				<td>Yes <input type="checkbox" checked={{lbs}} id="editLbs"></td>
+				<td><input type="reps" value="{{reps}}" id="editReps"></td>
+				<td><input type="button" value="Submit" id="editSubmit"></td>
+				<td><input type="button" value="Cancel" id="editCancel"></td>
+			</tr>
+			<tr id="statusRow">
+			</tr>
+			</tbody>
+		</table>
+	</fieldset>
+</form>
+
+
+<script src="/public/scripts/edit.js"></script>

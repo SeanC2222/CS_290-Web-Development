@@ -1,0 +1,92 @@
+#dataTable {
+	width: 700px;
+	padding: 10px;
+}
+
+#tableForm {
+	width: 710px;
+}
+
+.editInput {
+	width: 114px;
+}
+
+
+#inputForm {
+	position: relative;
+	width: 780px;
+	left: -2px;
+}
+
+#inputExercise {
+	padding-top: 1px;
+	padding-bottom: 1px;
+	padding-right: 1px;
+	padding-left: 1px;
+	height: 15px;
+	width: 131px;
+	border: 1px solid silver;
+}
+
+#inputWeight {
+	padding-top: 1px;
+	padding-bottom: 1px;
+	padding-right: 1px;
+	padding-left: 1px;
+	height: 15px;
+	width: 131px;
+	border: 1px solid silver;
+}
+
+#inputLbsContainer {
+	display: inline-block;
+	width: 135px;
+}
+
+#inputReps {
+	padding-top: 1px;
+	padding-bottom: 1px;
+	padding-right: 1px;
+	padding-left: 1px;
+	height: 15px;
+	width: 131px;
+	border: 1px solid silver;
+}
+
+#inputDate {
+	padding-top: 2.1px;
+	padding-bottom: 2.1px;
+	padding-right: 1px;
+	padding-left: 1px;
+	height: 13px;
+	width: 131px;
+	border: 1px solid silver;
+}
+
+#inputFormHeaders {
+	position: relative;
+	width: 696px;
+	left: -2px;
+}
+
+.hidden {
+	visibility: hidden;
+}
+
+input {
+	padding: 0px;
+}
+
+td {
+	border: 1px solid silver;
+}
+
+th {
+	border: 1px solid silver;
+	width: 135px;
+	padding: 0px;
+}
+
+fieldset{
+	border:1px solid black;
+}

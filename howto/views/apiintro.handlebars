@@ -1,0 +1,116 @@
+<div class="headerWrap"><div class="headerWrapInner"> Oregon Liquour Prices API Intro </div></div>
+
+<div class="navigation">
+	<ul class="navigationItems">
+		<li class="current"> <a href="/"> Introduction </a> </li>
+		<li class="navlink"> <a href="/whatareURIs"> What are URI's </a></li>
+		<li class="navlink"> Intro to Oregon Liquour Prices API </li>
+		<li class="navlink"> <a href="/APIPrice"> Prices </a> </li>
+		<li class="navlink"> <a href="/APIProduct"> Product </a> </li>
+		<li class="navlink"> <a href="/APIStore"> Stores </a> </li>
+	</ul>
+</div>
+
+<section class="mainContent">
+	<h4> Introduction </h4>
+	<p>
+		This API was designed by Tristan Waddington and represents a personal development of a web interface to search the Oregon Liquor Control Commissions' (OLCC) monthly pricing updates. The OLCC does not provide their own web API for this information, but provides data tables. This API (and corresponding <a href="http://www.oregonliquorprices.com"> web interface </a>) is meant to provide a means of accessing that data easily.
+	</p>
+
+ 	<h4> What it Does </h4>
+	<p>
+		Every month the OLCC publishes a listing of current prices of their liquor, and store inventory for all the stores in Oregon. This information comes out in tables, and can be accessed by anyone at their <a href="http://www.oregon.gov/OLCC/pages/index.aspx"> official homepage </a>. The web service parses the table when it is published, and updates its information based on the official publication. The information can be then accessed by the web interface provided, or can be retrieved in JSON format via this API. The data is separated into 3 different organziational structures: Price, Product, and Store.
+	</p>
+	
+	<h4> Price </h4>
+	<p>
+	Price is the first URI category that we can segragate our liquor into. The API supports returning a price list filtered by product, or an unfiltered list. To access the list, an HTTP GET request is made to:<br>
+	<div class="codeWrap"><code>http://www.oregonliquorprices.com/api/v1/price/</code></div><br>
+	The get request can include two types of queries:<br>
+	<ul>
+		<li>limit - the number of items returned in the list </li>
+		<li>offset - the starting index you wish to return your index at </li>
+	</ul>
+
+	Here is an example tool that will illustrate the information you receive back:
+	</p>
+
+	<form class="exampleForm">
+		<fieldset class="Ex1">
+			<legend> Price List Example Data </legend>
+			Limit: <input type="text" value="20" name="priceLimit" id="priceLimit">
+			Offset: <input type="text" value="0" name="priceOffset" id="priceOffset">
+			<input type="button" value="Submit" id="priceSubmit">
+		</fieldset>
+	</form>
+	
+	<form class="exampleForm">
+		<fieldset>
+			<legend> Price Return Data </legend>
+			<div id="priceReturnInformation"></div>
+			<iframe src="" id="priceReturnData"></iframe>
+		</fieldset>
+	</form>
+
+	<h4> Product </h4>
+	Product is the second URI category that we can segregate our liquor into. The API supports returning a list of products limited by queries as well as individual product searches. To access the product portion of the API, an HTTP GET request is made to:<br><br>
+	<div class="codeWrap"><code>http:www.oregonliquorprices.com/api/v1/product/</code></div><br>
+	The request for a list comes in the form of your typical query and can include the same parameters as the price search. The individual product search actually accesses an individual page generated for that product as part of the REST architecture. Instead of appending a query to the end of the address above, the actual product number is appended to the end. <br><br>
+	
+	<form class="exampleForm">
+		<fieldset class="Ex1">
+			<legend> Example 1: Product List Example Data </legend>
+			Limit: <input type="text" value="20" name="productLimit" id="productLimitQuery">
+			Offset: <input type="text" value="0" name="productOffset" id="productOffsetQuery">
+			<input type="button" value="Submit" id="productSubmitQuery">
+		</fieldset>
+		<fieldset class="Ex2">
+			<legend> Example 2: Product Number Example Data </legend>
+			Product Number: <input type="text" value="4162" name="productNumber" id="productNumber">
+			<input type="button" value="Submit" id="productSubmitProduct">
+		</fieldset>
+
+	</form>
+	
+	<form class="exampleForm">
+		<fieldset>
+			<legend> Product Return Data </legend>
+			<div id="productReturnInformation"></div>
+			<iframe src="" id="productReturnData"></iframe>
+		</fieldset>
+	</form>
+
+
+	<h4> Store </h4>
+	<p>
+	Store Data is the third URI category. The API supports retrieving lists of store information and like the price the query can set a limit and offset.
+	The store information can be accessed via a HTTP GET request at:<br>
+	<div class="codeWrap"><code> http://www.oregonliquorprices.com/api/v1/store </code></div><br>
+	As with the pricing and product, the response is a JSON object. Like the product, you can also request a store specific page.
+	<form class="exampleForm">
+		<fieldset class="Ex1">
+			<legend> Example 1: Store List Example Data </legend>
+			Limit: <input type="text" value="5" name="limit" id="storeLimit">
+			Offset: <input type="text" value="0" name="offset" id="storeOffset">
+			<input type="button" value="Submit" id="storeSubmitQuery">
+		</fieldset>
+		<fieldset class="Ex2">
+			<legend> Example 2: Store Number Example Data </legend>
+			Store Number: <input type="text" value="11" name="storeNumber" id="storeNumber">
+			<input type="button" value="Submit" id="storeSubmitNumber">
+		</fieldset>
+
+	</form>
+
+	<form class="exampleForm">
+		<fieldset>
+			<legend> Store Return Data </legend>
+			<div id="storeReturnInformation"></div>
+			<iframe src="" id="storeReturnData"></iframe>
+		</fieldset>
+	</form>
+
+
+</section>
+
+<script src="/public/scripts/apiIntro.js"></script>
