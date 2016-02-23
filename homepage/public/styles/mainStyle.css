@@ -1,34 +1,42 @@
-body {
-	background: linear-gradient(310deg, #000000, #000000);
+html, body {
 	margin: 0px;
 	padding: 0px;
+	width: 100%;
+	height: 100%;
+	background-color: #303030;
 }
 
-.pageHeader {
-	position: absolute;
-	top: 0px;
-	left: 0px;
+#pageWrapper {
+	margin: 20px;
+	display: block;
+	position: relative;
+	height: 90%;
+	background-color: #303030;
+}
+
+#pageHeader {
+	display: block;
+	position: relative;
 	width: 100%;
-	height: 90px;
-	background: linear-gradient(135deg,
-		rgba(101, 0, 204, 1),
-		rgba(101, 0, 204, .4),
-		rgba(60,0,60,.8),
-		rgba(60,0,60,1));
-	background-color: transparent;
+	height: 6%; 
 	margin: 0px;
-	padding: 0px;
-	border-bottom: 4px solid black;
+}
+
+#pageHeaderContent {
+	display: block;
+	position: absolute;
+	width: 100%;
+	bottom: 0px;
 }
 
 #nameHeader {
-	position: absolute;
-	color: white; 
-	font: italic 48px "Calibri", sans-serif;
-	width: auto;
+	display: block;
+	bottom: 0px;
+	color: #ffffff; 
+	font: italic 56px "Calibri", sans-serif;
+	margin: 0px;
+	margin-left: 10%;
 	height: auto;
-	bottom: -.8em;
-	left: 75px;
 	text-shadow:
 		-1px -1px 0 #000000,
 		-1px  1px 0 #000000,
@@ -36,30 +44,54 @@ body {
 		 1px -1px 0 #000000;
 }
 
-.sideBar {
-	position: absolute;
-	top: 94px;
-	left: 0;
-	width: 110px;
-	height: 845px;
-	background-color: rgba(101,0,204,.4);
-	border-right: 2px solid black;
-	border-bottom: 2px solid black;
+.lineBreak {
+	display: block;
+	width: 100%;
+	height: 1px;
+	background-color: #694FBC
+}
+
+#pageMiddle {
+	display: block;
+	position: relative;
+	margin-top: 10px;
+	width: 100%;
+	height: 85%;
+	border: 1px solid #07001C;
+	background-color: #3D2A7B;
+}
+
+#sideBar {
+	display: inline-block;
+	width: 10%;
+	height: 100%;
+	border-right: 1px solid #694FBC;
 }
 
 .buttonDiv {
-	padding: 5px;
-	height: 10%;
-	border: 3px solid black;
+	display: table;
+	width: 81px;
+	height: 85px;
+	padding-left: 5px;
+	padding-right: 5px;
+	margin: 3px;
+	border-top: 2px solid black;
+	border-right: 1px solid black;
+	border-left: 1px solid black;
 	border-radius: 10px;
-	background-color: #400080;
+	background-color: #310AAE;
+	background: linear-gradient(110deg, #310AAE,#422ADE, #310AAE); 
 }
 
 .buttonDivText {
+	display: table-cell;
+	width: auto;
+	height: auto;
+	vertical-align: middle;
 	font: 24px bold "Calibri", sans-serif;
 	text-align: center;
 	color: white;
-	position: static;
+	margin: 0px;
 	text-shadow:
 		-1px -1px 0 #000000,
 		-1px  1px 0 #000000,
@@ -68,41 +100,63 @@ body {
 
 }
 
-.contentSection {
+.buttonDivTextP {
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+}
+
+#contentSection {
+	display: inline-block;
+	position: absolute;
 	font-family: "Calibri", sans-serif;
 	text-align: center;
-	position: absolute;
-	display: inline-block;
-	top: 94px;
-	left: 112px;
-	width: 898px;
-	height: 805px;
-	background-color: #ffffff;
-	padding: 20px;
+	width: 90%;
+	height: 100%;
+	background-color: white;
+	border-left: 1px solid black;
 }
 
-.pageFooter {
+#contentSectionContent {
+	display: block;
 	position: absolute;
 	width: 100%;
-	height: 50px;
-	left: 0px; 
-	bottom: 0%;
-	background-color: #6500cc;
-	border-top: 4px solid black;
+	height: 90%;
 }
 
-.pageFooterInfo {
+#contentText {
+	display: block;
 	position: absolute;
-	width: 25%;
+	width: 100%;
+	height: 100%;
+}
+
+#pageFooter {
+	display: block;
+	position: relative;
+	width: 100%;
+	height: 5%;
+	margin-top: 10px;
+	background-color: black;
+}
+
+#pageFooterContent {
+	display: block;
+	position: absolute;
+	text-align: right;
+	width: 40%;
 	height: 100%;
 	margin: 0px;
 	right: 20px;
 }
 
-.pageFooterInfoText {
+#pageFooterContentText {
 	font: 16px "Calibri", sans-serif;
-	text-align: right;
 	margin: 0px;
 	color: white;
 }
-	
+
+#emailAddress {
+	color: white;
+	text-decoration: underline;
+}	
