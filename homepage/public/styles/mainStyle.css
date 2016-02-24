@@ -56,7 +56,6 @@ html, body {
 	position: relative;
 	margin-top: 10px;
 	width: 100%;
-	height: 85%;
 	border: 1px solid #07001C;
 	background-color: #3D2A7B;
 }
@@ -120,15 +119,16 @@ html, body {
 #contentSectionContent {
 	display: block;
 	position: absolute;
-	width: 100%;
+	width: 95%;
 	height: 90%;
+	margin: 30px;
 }
 
 #contentText {
 	display: block;
 	position: absolute;
-	width: 100%;
 	height: 100%;
+	overflow: hidden;
 }
 
 #pageFooter {

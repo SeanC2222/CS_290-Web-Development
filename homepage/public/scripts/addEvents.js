@@ -60,8 +60,22 @@ function buttonEventGenerator(button, content){
 		var tempButton = button;
 		tempButton.addEventListener('mouseover', function(){
 			var contentText = document.getElementById("contentText");
+			var contentTextParent = contentText.parentNode;
 			holdVariable = contentText.textContent;
-			contentText.innerHTML = content;
+			if(contentText){
+				contentTextParent.removeChild(contentText);
+			}
+			var newContent = document.createElement("div");
+			newContent.id = "contentText";
+			newContent.innerHTML = content;
+			contentTextParent.appendChild(newContent);
+			newContent.style.width = "100%";
+			if(tempButton.id == "introButton"){
+				newContent.style.overflow = "scroll";
+			} else {
+				newContent.style.overflow = "hidden";
+			}
+				
 			tempButton.style.backgroundColor = "red";
 		});
 
